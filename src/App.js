@@ -14,8 +14,10 @@ function App() {
     <div className="App">
         {screen === SCREEN.INTRO ? (
             <Intro userName={userName} setScreen={setScreen} setUsername={setUsername} />
+        ) : screen === SCREEN.GAME ? (
+            <Game userName={userName} setScreen={setScreen} />
         ) : (
-            <Game userName={userName} />
+            <div>Game Over..</div>
         )}
     </div>
     );
