@@ -42,6 +42,9 @@ export class Enemy {
         this.positionX -= speedX
         this.positionY -= speedY
 
+        if(window.meter)
+            console.log(window.meter.volume)
+
         if(!this.is_dead && this.isDead()) {
             this.is_dead = true
             player.deductHealth()
