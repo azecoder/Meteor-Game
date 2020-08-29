@@ -28,7 +28,7 @@ export class Enemy {
         return false;
     }
 
-    update = (player) => {
+    update = (player, bullets) => {
         if(this.is_dead) return
 
         const distanceX = this.positionX - centerX
@@ -42,12 +42,20 @@ export class Enemy {
         this.positionX -= speedX
         this.positionY -= speedY
 
-        if(window.meter)
-            console.log(window.meter.volume)
-
         if(!this.is_dead && this.isDead()) {
             this.is_dead = true
             player.deductHealth()
+        } 
+        if(this.is_dead) {
+            bullets.forEach(bullet => {
+                var distanceX = bullet.positionX - this.positionX
+                var distanceY = bullet.positionY - this.positionY
+                var distance = Math.sqrt(distanceX*distanceX+distanceY*distanceY)
+                console.log(distance)
+                if(Math.abs(distance) < this.radius) {
+                    this.is_dead = true;
+                }
+            })
         }
     }
 

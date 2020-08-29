@@ -3,6 +3,7 @@ import { SCREEN, GAME_HEIGHT, GAME_WIDTH, MAX_ENEMY_COUNT } from './constants';
 import { Player } from './player'
 import { Enemy } from './enemy'
 import { randomNumber } from './utils'
+import { Bullet } from './bullet';
 
 function Game({userName, setScreen}) {
 
@@ -11,11 +12,13 @@ function Game({userName, setScreen}) {
     let player
     let lastEnemyCreatedAt = Date.now()
     useEffect(() => {
-        player = new Player(GAME_WIDTH/2, GAME_HEIGHT/2)
+        player = new Player(userName, GAME_WIDTH/2, GAME_HEIGHT/2)
         canvas = document.getElementById("GameCanvas");
         ctx = canvas.getContext("2d");
         
         let enemies = []
+        let bullets = []
+        const firedBulletsCallback = (angle, posX, posY) => bullets.push(new Bullet(angle, posX, posY))
         setInterval(() => {
             ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
@@ -24,7 +27,7 @@ function Game({userName, setScreen}) {
                 return
             }
 
-            player.update()
+            player.update(firedBulletsCallback)
             player.draw(ctx)
 
             const random1 = randomNumber(0, GAME_WIDTH)
@@ -40,10 +43,17 @@ function Game({userName, setScreen}) {
 
             enemies = enemies.filter(enemy => !enemy.is_dead)
             enemies.forEach(enemy => {
-                enemy.update(player)
+                enemy.update(player, bullets)
                 enemy.draw(ctx)
             })
-        }, 1000 / 30)
+
+            bullets = bullets.filter(bullet => !bullet.is_dead)
+            bullets.forEach(bullet => {
+                bullet.update()
+                bullet.draw(ctx)
+            })
+        
+        }, 1000 / 10)
 
     });
 

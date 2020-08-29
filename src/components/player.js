@@ -1,6 +1,7 @@
 import { GAME_WIDTH, GAME_HEIGHT, PLAYER_RADIUS } from "./constants"
 
 export class Player {
+    name = "Rambo"
     positionX
     positionY
 
@@ -10,20 +11,26 @@ export class Player {
     is_dead = false;
     angle = 0
 
-    constructor(positionX, positionY) {
+    firedBullets = []
+    lastFireAt = Date.now()
+
+    constructor(userName, positionX, positionY) {
+        this.name = userName
         this.positionX = positionX
         this.positionY = positionY
     }
-
-    fire = () => {
-
-    }
-
-    update = () => {
+    
+    update = (firedBulletsCallback) => {
         if(this.health <= 0) {
             this.is_dead = true;
         }
         this.angle = (this.angle + 0.05) % 360;
+        
+        if(window.meter && window.meter.volume * 100 > 20) {
+            if(Date.now() - this.lastFireAt > 500) {
+                firedBulletsCallback(this.angle, GAME_WIDTH / 2, GAME_HEIGHT / 2)
+            }
+        }
     }
 
     deductHealth = () => {
@@ -39,13 +46,22 @@ export class Player {
         ctx.lineWidth = 0.3
         ctx.stroke();
 
-        // write health
+        // write Player Info
         ctx.font = "14px Ubuntu";
+        ctx.fillStyle = 'darkslateblue';
+        ctx.fillText("Player: " + this.name, 10, 20);
+        // write health
         ctx.fillStyle = 'darkolivegreen';
         ctx.fillText("Health: " + this.health, GAME_WIDTH-80, 20);
         // write ammo
         ctx.fillStyle = 'darkmagenta';
         ctx.fillText("Ammo: " + this.ammo, GAME_WIDTH-80, GAME_HEIGHT-10);
+        // write volume-meter value
+        if(window.meter) {
+            ctx.fillStyle = 'darkmagenta';
+            let vol_value = (window.meter.volume * 100).toFixed(4)
+            ctx.fillText("Volume: " + vol_value, 10, GAME_HEIGHT-10);
+        }
 
         // draw line for player
         ctx.beginPath();
