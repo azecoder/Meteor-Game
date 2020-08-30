@@ -5,7 +5,7 @@ import { Enemy } from './enemy'
 import { randomNumber } from './utils'
 import { Bullet } from './bullet';
 
-function Game({userName, setScreen}) {
+function Game({userName, setScreen, setScore}) {
 
     let canvas
     let ctx
@@ -24,6 +24,7 @@ function Game({userName, setScreen}) {
 
             if(player.is_dead) {
                 setScreen(SCREEN.RESULT)
+                setScore(player.score)
                 return
             }
 
@@ -53,7 +54,7 @@ function Game({userName, setScreen}) {
                 bullet.draw(ctx)
             })
         
-        }, 1000 / 10)
+        }, 1000 / 30)
 
     });
 

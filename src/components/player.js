@@ -13,11 +13,16 @@ export class Player {
 
     firedBullets = []
     lastFireAt = Date.now()
+    score = 0
 
     constructor(userName, positionX, positionY) {
         this.name = userName
         this.positionX = positionX
         this.positionY = positionY
+    }
+
+    increase_score = () => {
+        this.score += 10;
     }
     
     update = (firedBulletsCallback) => {
@@ -62,6 +67,9 @@ export class Player {
             let vol_value = (window.meter.volume * 100).toFixed(4)
             ctx.fillText("Volume: " + vol_value, 10, GAME_HEIGHT-10);
         }
+        // write score
+        ctx.fillStyle = 'darkolivegreen';
+        ctx.fillText("Score: " + this.score, GAME_WIDTH-180, 20);
 
         // draw line for player
         ctx.beginPath();

@@ -46,7 +46,7 @@ export class Enemy {
             this.is_dead = true
             player.deductHealth()
         } 
-        if(this.is_dead) {
+        if(!this.is_dead) {
             bullets.forEach(bullet => {
                 var distanceX = bullet.positionX - this.positionX
                 var distanceY = bullet.positionY - this.positionY
@@ -54,6 +54,8 @@ export class Enemy {
                 console.log(distance)
                 if(Math.abs(distance) < this.radius) {
                     this.is_dead = true;
+                    bullet.is_dead = true;
+                    player.increase_score()
                 }
             })
         }
